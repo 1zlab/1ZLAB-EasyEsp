@@ -1,8 +1,9 @@
 import network
 import json
 
+
 def load_config():
-    with open('/ezlab/esp_config.json','r') as f:
+    with open('/ezlab/esp_config.json', 'r') as f:
         config = json.loads(f.read())
 
     wifi_name = config['wifi_name']
@@ -22,3 +23,5 @@ def load_config():
         return True
     else:
         return False
+
+

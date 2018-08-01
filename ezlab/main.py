@@ -1,3 +1,14 @@
+import os
+
+
+if __name__ == '__main__':
+    print('init machine...')
+    files = os.listdir()
+    os.mkdir('ezlab')
+    for i in files:
+        if not i == 'main.py':
+            os.rename(i, '/ezlab/%s' % i)
+    main_code = """
 import network
 import json
 import sys
@@ -14,3 +25,8 @@ if __name__ == '__main__':
     else:
         # your own code goes here
         pass
+"""
+    with open('main.py', 'w') as f:
+        f.write(main_code)
+
+    print('init done,please reboot the machine.')

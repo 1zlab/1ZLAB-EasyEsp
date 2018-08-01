@@ -1,4 +1,5 @@
 .ezignore
+README.md
 ezesp.py
 __pycache__/
 
