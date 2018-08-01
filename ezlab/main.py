@@ -6,7 +6,7 @@ if __name__ == '__main__':
     files = os.listdir()
     os.mkdir('ezlab')
     for i in files:
-        if not i == 'main.py':
+        if not i == 'main.py' and not i == 'boot.py':
             os.rename(i, '/ezlab/%s' % i)
     main_code = """
 import network
