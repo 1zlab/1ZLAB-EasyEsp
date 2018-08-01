@@ -71,5 +71,7 @@ def handleChange(httpClient, httpResponse):
                                  contentCharset="UTF-8",
                                  content=content)
 
-
-hotloader = MicroWebSrv()
+def hotloader():
+    _hotloader = MicroWebSrv()
+    return _hotloader
+    
