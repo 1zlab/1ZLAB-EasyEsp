@@ -29,3 +29,6 @@ if __name__ == '__main__':
     if load_config():
         from hotload import hotloader
         hotloader.Start()
+    else:
+        # your own code 
+        pass
