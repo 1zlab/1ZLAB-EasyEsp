@@ -55,9 +55,9 @@ class FileEventHandler(FileSystemEventHandler):
 
         if event.is_directory:
             print("directory modified:{0}".format(event.src_path))
-            data = dict(event_type='directory_modified',
-                        filename=event.src_path)
-            requests.post('http://%s/change-file/' % self.host, data=data)
+            # data = dict(event_type='directory_modified',
+            #             filename=event.src_path)
+            # requests.post('http://%s/change-file/' % self.host, data=data)
 
         else:
             with open(event.src_path, 'r') as f:
