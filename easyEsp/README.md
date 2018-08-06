@@ -13,12 +13,18 @@ cd esp-hot-loader
 - 3 更改配置文件 ezlab/esp_config.json
 ```json
 {
-    "wifi_name": "xxxx", # wifi名称,确保自己开发用的电脑与esp32接入同一局域网络
-    "wifi_pwd": "xxxx", # wifi密码
-    "is_developing": "1" #是否开启开发(热更新)模式,1为开启,0为关闭
+    "wifi_name": "xxxx",
+    "wifi_pwd": "xxxx",
+    "is_developing": "1" 
 }
 ```
+分别对应为:
+> - wifi名称
+> - wifi密码
+> - 是否开启开发(热更新)模式,1为开启,0为关闭 
+
 - 4 部署到esp32
+
 ```sh
 sudo python ezesp.py deploy --com='/dev/ttyUSB0' --srcpath='./ezlab'
 ```

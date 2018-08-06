@@ -2,5 +2,6 @@
 README.md
 ezesp.py
 __pycache__/
-
+requirements.txt
+.gitignore
 
