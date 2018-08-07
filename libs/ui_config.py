@@ -27,6 +27,10 @@ class Ui_Dialog(object):
         self.button_deploy = QtWidgets.QPushButton(Dialog)
         self.button_deploy.setObjectName("button_deploy")
         self.verticalLayout.addWidget(self.button_deploy)
+        self.progressBar = QtWidgets.QProgressBar(Dialog)
+        self.progressBar.setProperty("value", 24)
+        self.progressBar.setObjectName("progressBar")
+        self.verticalLayout.addWidget(self.progressBar)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)

@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 from watchdog.events import *
+from PyQt5.QtCore import QObject, pyqtSignal
 import requests
 import json
+
 
 def is_ignored(filename):
     # 防止 './ezlab/main.py.20246d7692ece55bd2fa2a37aec9a8ba.py' 这种中间文件的产生
@@ -22,10 +24,17 @@ def is_ignored(filename):
     return False
 
 
-class FileEventHandler(FileSystemEventHandler):
+class FileEventHandler(FileSystemEventHandler, QObject):
+    logs = pyqtSignal(str)
+
     def __init__(self, host):
         FileSystemEventHandler.__init__(self)
+        QObject.__init__(self)
         self.host = host
+        self.logs.connect(self.print_logs)
+
+    def print_logs(self, log):
+        print('success:', log)
 
     def deploy_to_esp(self, event, event_type):
         print("==============================================================")
@@ -38,6 +47,8 @@ class FileEventHandler(FileSystemEventHandler):
 
         if event_type == 'moved':
             print("监测到{0}改动: {1} moved from {2} to {3}".format(
+                file_type_cn, file_type, event.src_path, event.dest_path))
+            self.logs.emit("监测到{0}改动: {1} moved from {2} to {3}".format(
                 file_type_cn, file_type, event.src_path, event.dest_path))
             data = dict(event_type='%s_moved' % file_type,
                         filename=event.src_path, dest_path=event.dest_path)
@@ -57,6 +68,8 @@ class FileEventHandler(FileSystemEventHandler):
         elif event_type == 'modified':
             print("监测到{0}改动: {1} modified:{2}".format(
                 file_type_cn, file_type, event.src_path))
+            self.logs.emit("监测到{0}改动: {1} modified:{2}".format(
+                file_type_cn, file_type, event.src_path))
             data = dict(event_type='%s_modified' %
                         file_type, filename=event.src_path)
 
@@ -64,12 +77,12 @@ class FileEventHandler(FileSystemEventHandler):
             pass
 
         print('正在将改动部署至ESP...')
-        req = requests.post('http://%s/change-file/' % self.host, data=data)
-        r = json.loads(req.text)
-        if r['code'] == 0:
-            print('针对于{0}的{1}改动已部署成功!'.format(event.src_path, event_type))
-        else:
-            print('部署失败.')
+        # req = requests.post('http://%s/change-file/' % self.host, data=data)
+        # r = json.loads(req.text)
+        # if r['code'] == 0:
+        #     print('针对于{0}的{1}改动已部署成功!'.format(event.src_path, event_type))
+        # else:
+        #     print('部署失败.')
         print("==============================================================\n")
 
     def on_moved(self, event):
