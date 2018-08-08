@@ -33,7 +33,7 @@ class ConfigDialog(QWidget):
         self.taskcode = taskcode
         self.com = ''
         try:
-            with open('./config.json', 'r') as f:
+            with open('./.hotload/config.json', 'r') as f:
                 self.config = json.loads(f.read())
         except:
             self.config = dict(wifi_pwd='', wifi_name='', is_developing='1')
@@ -59,7 +59,7 @@ class ConfigDialog(QWidget):
 
         if not self.config['wifi_name'] == '' and not self.config['wifi_pwd'] == '':
 
-            with open('./config.json', 'w') as f:
+            with open('./.hotload/config.json', 'w') as f:
                 f.write(json.dumps(self.config))
 
             if self.taskcode == 0:
@@ -92,9 +92,6 @@ class EzEspGui(QMainWindow):
 
     def init_data(self):
         self.path = ''
-        self.observer = Observer()
-        # self.event_handler = FileEventHandler(self.ui.line_edit_ip.text())
-        # self.observer.schedule(self.event_handler, self.path, True)
 
     def init_view(self):
         self.setWindowTitle('1ZLAB/EzEsp')
@@ -107,12 +104,13 @@ class EzEspGui(QMainWindow):
 
     def select_path(self):
         self.path = QFileDialog.getExistingDirectory()
+        os.system('cp ./libs/main.py %s' % self.path)
         self.setWindowTitle('1ZLAB/EzEsp--->%s' % self.path.split('/')[-1])
         # return path
 
     def start_hot_load(self):
         if self.path and self.ui.line_edit_ip.text():
-            # self.ui.combo_box_com.setEnabled(not self.is_not_start)
+
             self.ui.button_path.setEnabled(not self.is_not_start)
             self.ui.line_edit_ip.setEnabled(not self.is_not_start)
             self.is_not_start = not self.is_not_start
@@ -123,16 +121,13 @@ class EzEspGui(QMainWindow):
                 self.ui.button_start.setText('Stop')
 
                 self.event_handler = FileEventHandler(
-                    self.ui.line_edit_ip.text())
+                    self.ui.line_edit_ip.text(), self.path)
+                print(self.path)
+                self.observer = Observer()
                 self.observer.schedule(self.event_handler, self.path, True)
                 self.event_handler.logs.connect(self.print_logs)
 
                 self.observer.start()
-                try:
-                    while True:
-                        time.sleep(1)
-                except KeyboardInterrupt:
-                    self.observer.stop()
 
         else:
             QMessageBox.warning(self, 'Waring', '请先指定工程路径和ESP IP')
@@ -146,19 +141,9 @@ class EzEspGui(QMainWindow):
         self.c.show()
 
     def print_logs(self, log):
-        print('=====================\n',log)
+
         self.ui.text_browser.setText(
             self.ui.text_browser.toPlainText()+"\n"+log)
-    # host = host
-    #     observer = Observer()
-    #     event_handler = FileEventHandler(host)
-    #     observer.schedule(event_handler, path, True)
-    #     observer.start()
-    #     try:
-    #         while True:
-    #             time.sleep(1)
-    #     except KeyboardInterrupt:
-    #         observer.stop()
 
 
 if __name__ == '__main__':

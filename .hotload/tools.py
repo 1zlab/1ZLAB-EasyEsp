@@ -1,9 +1,10 @@
 import network
 import json
+import os
 
 
 def load_config():
-    with open('/ezlab/esp_config.json', 'r') as f:
+    with open('/hotload/config.json', 'r') as f:
         config = json.loads(f.read())
 
     wifi_name = config['wifi_name']
@@ -15,8 +16,9 @@ def load_config():
     if not wlan.isconnected():
         print('connecting to network...')
         wlan.connect(wifi_name, wifi_pwd)
-        while not wlan.isconnected():
-            pass
+        for i in range(3):
+            if not wlan.isconnected():
+                pass
     print('network config:', wlan.ifconfig())
     if is_developing:
         print('Develope Mode Enabled.')
@@ -25,3 +27,43 @@ def load_config():
         return False
 
 
+def wifi_config():
+    wifi_name = input('wifi name: ')
+    wifi_pwd = input('password: ')
+    with open('/hotload/config.json', 'r') as f:
+        config = json.loads(f.read())
+
+    config['wifi_name'] = wifi_name
+    config['wifi_pwd'] = wifi_pwd
+
+    with open('/hotload/config.json', 'w') as f:
+        f.write(json.dumps(config))
+
+
+def clear(path='/'):
+    warning = input(
+        'Do you really want to remove all python codes from esp32?[y/n]')
+    if warning == 'y' or warning == 'yes':
+        for i in os.listdir(path):
+            if i == 'boot.py':
+                continue
+            try:
+                os.remove(path+'/'+i)
+            except:
+                clear_up(path+'/'+i)
+        os.rmdir(path)
+
+
+def is_developing():
+    with open('/hotload/config.json', 'r') as f:
+        config = json.loads(f.read())
+
+    is_developing = config['is_developing']
+
+    if is_developing:
+        config['is_developing'] = 0
+    else:
+        config['is_developing'] = 1
+
+    with open('/hotload/config.json', 'w') as f:
+        f.write(json.dumps(config))
