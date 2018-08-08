@@ -38,4 +38,8 @@ python ezesp.py hotload --path='.' --host='192.168.xxx.xxx'
 
 ## TODO:
 - 使用UDP广播自动捕获 esp32 内网ip
+- 仔细研究ampy
+- 创建消息队列 5s为一发送周期
+- 在ESP32上搭建web页面
+- 研究如何使用webchannel
 - 完善README.md
