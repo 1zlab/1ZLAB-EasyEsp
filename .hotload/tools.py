@@ -1,5 +1,6 @@
 import network
 import json
+import socket
 import os
 
 
@@ -22,6 +23,7 @@ def load_config():
     print('network config:', wlan.ifconfig())
     if is_developing:
         print('Develope Mode Enabled.')
+
         return True
     else:
         return False
@@ -67,3 +69,18 @@ def is_developing():
 
     with open('/hotload/config.json', 'w') as f:
         f.write(json.dumps(config))
+
+
+def find_host():
+    import urequests
+    for i in range(1, 255):
+        for j in range(1, 255):
+            try:
+                r = urequests.get('http://192.168.%s.%s:5000/' % i % j)
+                if r.text:
+                    print(r.text)
+                    break
+            except:
+                # print('no host response')
+                pass
+        break

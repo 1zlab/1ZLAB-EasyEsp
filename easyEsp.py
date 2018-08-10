@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtNetwork import QUdpSocket
+from PyQt5.QtNetwork import QHostAddress
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QIcon
 from libs.ui_app import Ui_MainWindow
@@ -92,6 +94,9 @@ class EzEspGui(QMainWindow):
 
     def init_data(self):
         self.path = ''
+        # self.host = ''
+        # self.sniffer = QUdpSocket(self)
+        # self.sniffer.bind(QHostAddress.LocalHost, 5555)
 
     def init_view(self):
         self.setWindowTitle('1ZLAB/EzEsp')
@@ -101,12 +106,21 @@ class EzEspGui(QMainWindow):
         self.ui.action_clean_up.triggered.connect(self.clear_up)
         self.ui.button_path.clicked.connect(self.select_path)
         self.ui.button_start.clicked.connect(self.start_hot_load)
+        # self.sniffer.readyRead.connect(self.sniff_ip)
 
     def select_path(self):
         self.path = QFileDialog.getExistingDirectory()
         os.system('cp ./libs/main.py %s' % self.path)
         self.setWindowTitle('1ZLAB/EzEsp--->%s' % self.path.split('/')[-1])
         # return path
+
+    # def sniff_ip(self):
+    #     while self.sniffer.hasPendingDatagrams():
+    #         msglist = self.sniffer.readDatagram(5555)
+    #         print(msglist)
+    #         msg = msglist[0].decode(encoding='utf-8')
+    #         self.ui.line_edit_ip.setText(msg)
+            # self.host = msg
 
     def start_hot_load(self):
         if self.path and self.ui.line_edit_ip.text():
