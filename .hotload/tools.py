@@ -52,7 +52,7 @@ def clear(path='/'):
             try:
                 os.remove(path+'/'+i)
             except:
-                clear_up(path+'/'+i)
+                clear(path+'/'+i)
         os.rmdir(path)
 
 
@@ -71,16 +71,3 @@ def is_developing():
         f.write(json.dumps(config))
 
 
-def find_host():
-    import urequests
-    for i in range(1, 255):
-        for j in range(1, 255):
-            try:
-                r = urequests.get('http://192.168.%s.%s:5000/' % i % j)
-                if r.text:
-                    print(r.text)
-                    break
-            except:
-                # print('no host response')
-                pass
-        break

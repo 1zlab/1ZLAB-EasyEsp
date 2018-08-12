@@ -4,13 +4,26 @@ import os
 
 @MicroWebSrv.route('/')
 def homepage(httpClient, httpResponse):
-    print('homepage visited!')
-    content = json.dumps(
-        dict(code=0, message='hello from micropython server!'))
+    # print('homepage visited!')
+    files = os.listdir()
+
+      content   = """\
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>1ZLAB ESP32</title>
+    </head>
+    <body>
+        <p>hahahhhahh</p>
+    </body>
+  </html>
+  """ 
     httpResponse.WriteResponseOk(headers=None,
                                  contentType="text/html",
                                  contentCharset="UTF-8",
                                  content=content)
+
 
 
 @MicroWebSrv.route('/change-file', 'POST')
