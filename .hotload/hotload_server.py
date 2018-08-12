@@ -7,7 +7,7 @@ def homepage(httpClient, httpResponse):
     # print('homepage visited!')
     files = os.listdir()
 
-      content   = """\
+    content   = """\
   <!DOCTYPE html>
   <html>
     <head>

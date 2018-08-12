@@ -17,9 +17,9 @@ def load_config():
     if not wlan.isconnected():
         print('connecting to network...')
         wlan.connect(wifi_name, wifi_pwd)
-        for i in range(3):
-            if not wlan.isconnected():
-                pass
+        
+        if not wlan.isconnected():
+            wlan.active(False)
     print('network config:', wlan.ifconfig())
     if is_developing:
         print('Develope Mode Enabled.')
