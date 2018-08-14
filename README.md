@@ -1,27 +1,34 @@
-# esp-hot-loader
+# EasyEsp
 这是为ESP32 micropython 开发的一款热更新脚本,旨在为各位MicroPython爱好者带来更好的开发体验和开发效率.
 
 ## How to use
-- 1 克隆git仓库到本地
+
+克隆git仓库到本地
 ```sh
 git clone https://github.com/1zlab/esp-hot-loader.git
 ```
-- 2 进入工程目录
+进入项目目录
 ```sh
-cd esp-hot-loader
+cd 1ZLAB-EasyEsp
 ```
-- 3 更改配置文件 ezlab/esp_config.json
-```json
-{
-    "wifi_name": "xxxx",
-    "wifi_pwd": "xxxx",
-    "is_developing": "1" 
-}
+安装依赖
+```sh
+pip3 install -r requirements.txt
 ```
-分别对应为:
-> - wifi名称
-> - wifi密码
-> - 是否开启开发(热更新)模式,1为开启,0为关闭 
+
+
+### GUI版本
+```sh
+python easyEsp.py
+```
+[]()
+
+
+
+
+
+
+
 
 - 4 部署到esp32
 
@@ -37,9 +44,6 @@ python ezesp.py hotload --path='.' --host='192.168.xxx.xxx'
 - 8 开始享受拔掉usb线,通过wifi热加载带来的乐趣吧...
 
 ## TODO:
-- 使用UDP广播自动捕获 esp32 内网ip
-- 仔细研究ampy
 - 创建消息队列 5s为一发送周期
-- 在ESP32上搭建web页面
-- 研究如何使用webchannel
 - 完善README.md
+- pyqtdeploy打包
