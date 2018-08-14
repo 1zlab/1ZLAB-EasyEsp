@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'dialog.ui'
+# Form implementation generated from reading ui file './ui/qtcreator_deploy_hotload.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -8,10 +8,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(object):
+class Ui_DialogDeploy(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(413, 290)
+        Dialog.setGeometry(QtCore.QRect(0, 0, 413, 290))
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.combo_box_com = QtWidgets.QComboBox(Dialog)
@@ -37,8 +37,8 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.line_edit_wifi.setPlaceholderText(_translate("Dialog", "wifi name"))
-        self.line_edit_pwd.setPlaceholderText(_translate("Dialog", "wifi password"))
-        self.button_deploy.setText(_translate("Dialog", "Deploy"))
+        Dialog.setWindowTitle(_translate("DialogDeployHotload", "Deploy Hotload"))
+        self.line_edit_wifi.setPlaceholderText(_translate("DialogDeployHotload", "wifi name"))
+        self.line_edit_pwd.setPlaceholderText(_translate("DialogDeployHotload", "wifi password"))
+        self.button_deploy.setText(_translate("DialogDeployHotload", "Deploy"))
 

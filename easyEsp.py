@@ -4,7 +4,9 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QComboBox
+from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtNetwork import QUdpSocket
@@ -21,18 +23,49 @@ import os
 import json
 
 
+class pwdDialog(QWidget):
+
+    confirmed = pyqtSignal(str)
+
+    def __init__(self, parent, taskcode):
+        super().__init__()
+        self.parent = parent
+        self.line_edit_pwd = QLineEdit(self)
+        self.line_edit_pwd.setPlaceholderText('sudo password')
+        self.line_edit_pwd.returnPressed.connect(self.send_pwd)
+        self.line_edit_pwd.setEchoMode(QLineEdit.Password)
+        self.taskcode = taskcode
+
+    def send_pwd(self):
+        # test password
+        ret = os.system('echo \'%s\' | sudo -S pwd' % self.line_edit_pwd.text())
+        if ret == 0:
+            self.confirmed.emit(self.line_edit_pwd.text())
+            self.close()
+            self.dialog = ConfigDialog(self.taskcode, self.line_edit_pwd.text())
+            self.dialog.show()
+        else:
+            self.line_edit_pwd.clear()
+            self.line_edit_pwd.setPlaceholderText('wrong password, try again')
+
+
 class ConfigDialog(QWidget):
     loadprce = pyqtSignal(int)
 
-    def __init__(self, taskcode):
+    def __init__(self, taskcode, pwd):
         super().__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.init_view(taskcode)
         self.init_connection()
+        self.pwd = pwd
 
     def init_view(self, taskcode):
         self.taskcode = taskcode
+        if self.taskcode == 1:
+            self.windowTitle = 'clear esp'
+        elif self.taskcode == 0:
+            self.windowTitle = 'deploy to esp'
         self.com = ''
         try:
             with open('./.hotload/config.json', 'r') as f:
@@ -66,14 +99,20 @@ class ConfigDialog(QWidget):
 
             if self.taskcode == 0:
                 total = len(os.listdir('./.hotload'))
+                pwd_confirm = pwdDialog(self)
+
                 for index, i in enumerate(os.listdir('./.hotload')):
                     os.system(
-                        'sudo ampy -p {0} put {1}/{2}'.format(self.com, './.hotload', i))
+                        'echo \'{0}\' | sudo -S ampy -p {1} put {2}/{3}'.format(self.pwd, self.com, './.hotload', i))
+
+                    if not r == 0:
+                        break
+
                     self.loadprce.emit(100*int(index)/total)
 
             else:
                 os.system(
-                    'sudo ampy -p {0} put {1}/{2}'.format(self.com, './.clear', 'main.py'))
+                    'echo \'{0}\' | sudo ampy -p {1} put {2}/{3}'.format(self.pwd, self.com, './.clear', 'main.py'))
 
             self.ui.progressBar.hide()
             self.close()
@@ -94,9 +133,7 @@ class EzEspGui(QMainWindow):
 
     def init_data(self):
         self.path = ''
-        # self.host = ''
-        # self.sniffer = QUdpSocket(self)
-        # self.sniffer.bind(QHostAddress.LocalHost, 5555)
+        self.pwd = ''
 
     def init_view(self):
         self.setWindowTitle('1ZLAB/EzEsp')
@@ -106,12 +143,21 @@ class EzEspGui(QMainWindow):
         self.ui.action_clean_up.triggered.connect(self.clear_up)
         self.ui.button_path.clicked.connect(self.select_path)
         self.ui.button_start.clicked.connect(self.start_hot_load)
-        # self.sniffer.readyRead.connect(self.sniff_ip)
+        # 启动GUI 验证 password
+
+    def set_pwd(self, pwd):
+        self.pwd = pwd
+        print(self.pwd)
 
     def select_path(self):
         self.path = QFileDialog.getExistingDirectory()
-        os.system('cp ./libs/main.py %s' % self.path)
+        if not os.path.exists(self.path+'/main.py'):
+            os.system('cp ./libs/main.py %s' % self.path)
         self.setWindowTitle('1ZLAB/EzEsp--->%s' % self.path.split('/')[-1])
+        try:
+            os.system('code %s' % self.path)
+        except:
+            pass
         # return path
 
     # def sniff_ip(self):
@@ -147,12 +193,22 @@ class EzEspGui(QMainWindow):
             QMessageBox.warning(self, 'Waring', '请先指定工程路径和ESP IP')
 
     def deploy_hotload(self):
-        self.c = ConfigDialog(0)
-        self.c.show()
+        if not self.pwd:
+            self.pwd_confirm = pwdDialog(self, 0)
+            self.pwd_confirm.confirmed.connect(self.set_pwd)
+            self.pwd_confirm.show()
+        else:
+            self.c = ConfigDialog(0, self.pwd)
+            self.c.show()
 
     def clear_up(self):
-        self.c = ConfigDialog(1)
-        self.c.show()
+        if not self.pwd:
+            self.pwd_confirm = pwdDialog(self, 1)
+            self.pwd_confirm.confirmed.connect(self.set_pwd)
+            self.pwd_confirm.show()
+        else:
+            self.c = ConfigDialog(1, self.pwd)
+            self.c.show()
 
     def print_logs(self, log):
 

@@ -15,15 +15,25 @@ def load_config():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     if not wlan.isconnected():
-        print('connecting to network...')
+        print('\033[1;31;40mconnecting to network...\033[0m')
         wlan.connect(wifi_name, wifi_pwd)
         
-        if not wlan.isconnected():
-            wlan.active(False)
-    print('network config:', wlan.ifconfig())
-    if is_developing:
-        print('Develope Mode Enabled.')
+        while not wlan.isconnected():
+            import time
+            time.sleep(5)
+            if not wlan.isconnected():
+                wlan.active(False)
+                print("\033[1;31;40mWifi connection error,please reset the wifi config\033[0m") 
 
+                from tools import wifi_config
+                wifi_config()
+                break
+            else:            
+                print('\033[1;31;40mNetwork Config: \033[0m', wlan.ifconfig())
+                print('\033[1;31;40mESP32 IP: \033[0m', wlan.ifconfig()[0])
+
+    if is_developing:
+        print('\033[1;31;40mDevelope Mode Enabled.\033[0m')
         return True
     else:
         return False
@@ -41,11 +51,14 @@ def wifi_config():
     with open('/hotload/config.json', 'w') as f:
         f.write(json.dumps(config))
 
+    print('\033[1;31;40mwifi config changed. to apply the changes you made, please reboot\033[0m')
+
 
 def clear(path='/'):
     warning = input(
         'Do you really want to remove all python codes from esp32?[y/n]')
     if warning == 'y' or warning == 'yes':
+
         for i in os.listdir(path):
             if i == 'boot.py':
                 continue

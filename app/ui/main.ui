@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>832</width>
-    <height>550</height>
+    <width>980</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>EasyEsp</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -63,7 +63,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>832</width>
+     <width>980</width>
      <height>29</height>
     </rect>
    </property>
@@ -97,6 +97,16 @@
   <action name="action_clean_up">
    <property name="text">
     <string>clean up esp32</string>
+   </property>
+  </action>
+  <action name="actionWIFI">
+   <property name="text">
+    <string>WIFI</string>
+   </property>
+  </action>
+  <action name="actionSerial_Port">
+   <property name="text">
+    <string>Serial Port</string>
    </property>
   </action>
  </widget>
