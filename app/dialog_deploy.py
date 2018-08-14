@@ -47,7 +47,7 @@ class DeployHotLoad(Deploy):
 
     def init_view(self):
         super().init_view()
-        self.windowTitle = 'deploy to esp'
+        self.setWindowTitle('Deploy Hotload Framework to ESP')
         try:
             with open('./.hotload/config.json', 'r') as f:
                 self.config = json.loads(f.read())
@@ -91,7 +91,7 @@ class DeployClear(Deploy):
         super().init_view()
         self.ui.line_edit_pwd.hide()
         self.ui.line_edit_wifi.hide()
-        self.windowTitle = 'Deploy Clear Script to ESP'
+        self.setWindowTitle('Deploy Clear Script to ESP')
 
     def button_deploy_clicked(self):
         super().button_deploy_clicked()

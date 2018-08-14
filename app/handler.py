@@ -3,6 +3,7 @@
 from watchdog.events import *
 from PyQt5.QtCore import QObject, pyqtSignal
 import requests
+import time
 import json
 
 
@@ -43,26 +44,26 @@ class FileEventHandler(FileSystemEventHandler, QObject):
             file_type_cn = '文件'
 
         if event_type == 'moved':
-            self.logs.emit("监测到{0}改动: {1} moved from {2} to {3}".format(
+            self.logs.emit(time.ctime().split(' ')[3]+"\n"+"监测到{0}改动: {1} moved from {2} to {3}".format(
                 file_type_cn, file_type, event.src_path.replace(self.path, ''), event.dest_path.replace(self.path, '')))
 
             data = dict(event_type='%s_moved' % file_type,
                         filename=event.src_path.replace(self.path, ''), dest_path=event.dest_path.replace(self.path, ''))
 
         elif event_type == 'created':
-            self.logs.emit("监测到{0}改动: {1} created:{2}".format(
+            self.logs.emit(time.ctime().split(' ')[3]+"\n"+"监测到{0}改动: {1} created:{2}".format(
                 file_type_cn, file_type, event.src_path.replace(self.path, '')))
             data = dict(event_type='%s_created' %
                         file_type, filename=event.src_path.replace(self.path, ''))
 
         elif event_type == 'deleted':
-            self.logs.emit("监测到{0}改动: {1} deleted:{2}".format(
+            self.logs.emit(time.ctime().split(' ')[3]+"\n"+"监测到{0}改动: {1} deleted:{2}".format(
                 file_type_cn, file_type, event.src_path.replace(self.path, '')))
             data = dict(event_type='%s_deleted' %
                         file_type, filename=event.src_path.replace(self.path, ''))
 
         elif event_type == 'modified':
-            self.logs.emit("监测到{0}改动: {1} modified:{2}".format(
+            self.logs.emit(time.ctime().split(' ')[3]+"\n"+"监测到{0}改动: {1} modified:{2}".format(
                 file_type_cn, file_type, event.src_path.replace(self.path, '')))
             with open(event.src_path, 'r') as f:
                 content = f.read()

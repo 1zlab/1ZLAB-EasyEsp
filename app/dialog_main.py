@@ -48,9 +48,8 @@ class EasyEsp(QMainWindow):
 
     def select_path(self):
         self.path = QFileDialog.getExistingDirectory()
-        
+
         self.setWindowTitle('1ZLAB/EzEsp--->%s' % self.path.split('/')[-1])
-        
 
     def start_hot_load(self):
         if self.path and self.ui.line_edit_ip.text():
