@@ -18,6 +18,7 @@ class Pwd(QWidget):
         super().__init__()
         self.ui = Ui_Pwd()
         self.ui.setupUi(self)
+        self.setWindowIcon(QIcon('./icon.png'))
         self.setWindowTitle('Input Password')
         self.ui.line_edit_pwd.setPlaceholderText('sudo password')
         self.ui.line_edit_pwd.returnPressed.connect(self.send_pwd)

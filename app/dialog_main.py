@@ -34,6 +34,7 @@ class EasyEsp(QMainWindow):
 
     def init_view(self):
         self.setWindowTitle('1ZLAB/EasyEsp')
+        self.setWindowIcon(QIcon('./icon.png'))
 
     def init_connection(self):
         self.ui.action_init_hotload.triggered.connect(self.deploy_hotload)

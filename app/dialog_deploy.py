@@ -21,6 +21,7 @@ class Deploy(QWidget):
         self.init_connection()
 
     def init_view(self):
+        self.setWindowIcon(QIcon('./icon.png'))
         self.com = ''
         self.ui.progressBar.hide()
         coms = [i for i in os.listdir('/dev/') if i.startswith('ttyUSB')]
