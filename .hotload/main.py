@@ -2,7 +2,22 @@ import os
 
 
 if __name__ == '__main__':
-    print('init machine...')
+    print("""\033[1;31;40m
+                                             
+                                                                                                                       
+     I$    $$$$$$   $        \$    $$$$$  
+    $$$        z$  m$        $$    $b  $$ 
+  $$ $"        $   $j       $%$    $    $ 
+     $       l$    $        $ $$   $   M$ 
+     $      '$     $       $  ]$   $$$$v  
+     $      $      $       $   $  u$   $$ 
+    O$     $      o$      $$$$$$  $0    $ 
+    $     $       $$     %$    $  $    $% 
+ $$$$$$@ $$$$$$$  $$$$$$ $     $  $$$$$$  
+                                          
+                                                                                                                                                                   
+    \033[0m""")
+    print('\033[1;31;40minit machine...\033[0m')
     files = os.listdir()
     os.mkdir('hotload')
     for i in files:
@@ -29,4 +44,4 @@ if __name__ == '__main__':
     with open('main.py', 'w') as f:
         f.write(main_code)
 
-    print('init done,please reboot the machine.')
+    print('\033[1;31;40minit done,please reboot the machine.\033[0m')

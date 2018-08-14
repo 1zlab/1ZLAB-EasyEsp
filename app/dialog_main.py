@@ -48,13 +48,9 @@ class EasyEsp(QMainWindow):
 
     def select_path(self):
         self.path = QFileDialog.getExistingDirectory()
-        if not os.path.exists(self.path+'/main.py'):
-            os.system('cp ./libs/main.py %s' % self.path)
+        
         self.setWindowTitle('1ZLAB/EzEsp--->%s' % self.path.split('/')[-1])
-        try:
-            os.system('code %s' % self.path)
-        except:
-            pass
+        
 
     def start_hot_load(self):
         if self.path and self.ui.line_edit_ip.text():
@@ -70,10 +66,17 @@ class EasyEsp(QMainWindow):
 
                 self.event_handler = FileEventHandler(
                     self.ui.line_edit_ip.text(), self.path)
-                # print(self.path)
+                print(self.path)
                 self.observer = Observer()
                 self.observer.schedule(self.event_handler, self.path, True)
                 self.event_handler.logs.connect(self.print_logs)
+
+                if not os.path.exists(self.path+'/main.py'):
+                    os.system('cp ./libs/main.py %s' % self.path)
+                try:
+                    os.system('code %s' % self.path)
+                except:
+                    pass
 
                 self.observer.start()
 

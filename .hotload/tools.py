@@ -3,6 +3,22 @@ import json
 import socket
 import os
 
+def print_logo():
+    print("""\033[1;31;40m
+                                             
+                                                                                                                       
+     I$    $$$$$$   $        \$    $$$$$  
+    $$$        z$  m$        $$    $b  $$ 
+  $$ $"        $   $j       $%$    $    $ 
+     $       l$    $        $ $$   $   M$ 
+     $      '$     $       $  ]$   $$$$v  
+     $      $      $       $   $  u$   $$ 
+    O$     $      o$      $$$$$$  $0    $ 
+    $     $       $$     %$    $  $    $% 
+ $$$$$$@ $$$$$$$  $$$$$$ $     $  $$$$$$  
+                                          
+                                                                                                                                                                   
+    \033[0m""")
 
 def load_config():
     with open('/hotload/config.json', 'r') as f:
@@ -33,6 +49,7 @@ def load_config():
                 print('\033[1;31;40mESP32 IP: \033[0m', wlan.ifconfig()[0])
 
     if is_developing:
+        print_logo()
         print('\033[1;31;40mDevelope Mode Enabled.\033[0m')
         return True
     else:

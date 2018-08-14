@@ -2,12 +2,13 @@ from microWebSrv import MicroWebSrv
 import json
 import os
 
+
 @MicroWebSrv.route('/')
 def homepage(httpClient, httpResponse):
     # print('homepage visited!')
     files = os.listdir()
 
-    content   = """\
+    content = """\
   <!DOCTYPE html>
   <html>
     <head>
@@ -18,12 +19,11 @@ def homepage(httpClient, httpResponse):
         <p>hahahhhahh</p>
     </body>
   </html>
-  """ 
+  """
     httpResponse.WriteResponseOk(headers=None,
                                  contentType="text/html",
                                  contentCharset="UTF-8",
                                  content=content)
-
 
 
 @MicroWebSrv.route('/change-file', 'POST')
@@ -31,8 +31,8 @@ def handleChange(httpClient, httpResponse):
     formData = httpClient.ReadRequestPostedFormData()
     event_type = formData['event_type']
     filename = formData['filename']
-    # content = formData['content']
 
+    print('hotload --> {0} {1}'.format(event_type, filename))
     if event_type == 'file_modified':
         with open(filename, 'w') as f:
             f.write(formData['content'])
@@ -42,7 +42,7 @@ def handleChange(httpClient, httpResponse):
             os.remove(filename)
         except:
             pass
-    
+
     if event_type == 'directory_deleted':
         files = os.listdir(filename)
         if files:
@@ -53,11 +53,11 @@ def handleChange(httpClient, httpResponse):
                     pass
 
         os.rmdir(filename)
-        
+
     if event_type == 'file_created':
-        with open(filename,'w') as f:
+        with open(filename, 'w') as f:
             f.write('')
-    
+
     if event_type == 'directory_created':
         try:
             os.mkdir(filename)
@@ -67,14 +67,14 @@ def handleChange(httpClient, httpResponse):
     if event_type == 'directory_moved':
         dest_path = formData['dest_path']
         try:
-            os.rename(filename,dest_path)
+            os.rename(filename, dest_path)
         except:
             pass
-            
+
     if event_type == 'file_moved':
         dest_path = formData['dest_path']
         try:
-            os.rename(filename,dest_path)
+            os.rename(filename, dest_path)
         except:
             pass
 
@@ -84,7 +84,7 @@ def handleChange(httpClient, httpResponse):
                                  contentCharset="UTF-8",
                                  content=content)
 
+
 def hotloader():
     _hotloader = MicroWebSrv()
     return _hotloader
-    

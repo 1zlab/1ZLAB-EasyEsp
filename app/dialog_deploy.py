@@ -68,14 +68,10 @@ class DeployHotLoad(Deploy):
                 f.write(json.dumps(self.config))
 
             total = len(os.listdir('./.hotload'))
-            pwd_confirm = pwdDialog(self)
 
             for index, i in enumerate(os.listdir('./.hotload')):
                 os.system(
                     'echo \'{0}\' | sudo -S ampy -p {1} put {2}/{3}'.format(self.pwd, self.com, './.hotload', i))
-
-                if not r == 0:
-                    break
 
                 self.loadprce.emit(100*int(index)/total)
 

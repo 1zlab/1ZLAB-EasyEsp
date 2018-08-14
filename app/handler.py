@@ -64,9 +64,10 @@ class FileEventHandler(FileSystemEventHandler, QObject):
         elif event_type == 'modified':
             self.logs.emit("监测到{0}改动: {1} modified:{2}".format(
                 file_type_cn, file_type, event.src_path.replace(self.path, '')))
-
+            with open(event.src_path, 'r') as f:
+                content = f.read()
             data = dict(event_type='%s_modified' %
-                        file_type, filename=event.src_path.replace(self.path, ''))
+                        file_type, filename=event.src_path.replace(self.path, ''), content=content)
 
         else:
             pass
