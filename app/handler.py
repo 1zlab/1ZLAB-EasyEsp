@@ -65,8 +65,9 @@ class FileEventHandler(FileSystemEventHandler, QObject):
         elif event_type == 'modified':
             self.logs.emit(time.ctime().split(' ')[3]+"\n"+"监测到{0}改动: {1} modified:{2}".format(
                 file_type_cn, file_type, event.src_path.replace(self.path, '')))
-            with open(event.src_path, 'r') as f:
-                content = f.read()
+            if file_type == 'file':
+                with open(event.src_path, 'r') as f:
+                    content = f.read()
             data = dict(event_type='%s_modified' %
                         file_type, filename=event.src_path.replace(self.path, ''), content=content)
 
@@ -74,13 +75,16 @@ class FileEventHandler(FileSystemEventHandler, QObject):
             pass
 
         self.logs.emit('正在将改动部署至ESP...')
-        req = requests.post('http://%s/change-file/' % self.host, data=data)
-        r = json.loads(req.text)
-        if r['code'] == 0:
-            self.logs.emit('针对于{0}的{1}改动已部署成功!'.format(
-                event.src_path.replace(self.path, ''), event_type))
-        else:
-            self.logs.emit('部署失败.')
+        try:
+            req = requests.post('http://%s/change-file/' % self.host, data=data)
+            r = json.loads(req.text)
+            if r['code'] == 0:
+                self.logs.emit('针对于{0}的{1}改动已部署成功!'.format(
+                    event.src_path.replace(self.path, ''), event_type))
+            else:
+                self.logs.emit('部署失败.')
+        except:
+            self.logs.emit('请求错误')
         self.logs.emit("\n")
 
     def on_moved(self, event):
