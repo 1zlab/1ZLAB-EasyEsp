@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtGui import QIcon
 from app.ui_deploy import Ui_DialogDeploy
 import sys
@@ -13,14 +14,16 @@ import json
 class Deploy(QWidget):
     loadprce = pyqtSignal(int)
 
-    def __init__(self):
+    def __init__(self, parent):
         super().__init__()
         self.ui = Ui_DialogDeploy()
         self.ui.setupUi(self)
+        self.parent = parent
         self.init_view()
         self.init_connection()
 
     def init_view(self):
+        self.setWindowModality(Qt.ApplicationModal)
         self.setWindowIcon(QIcon('./icon.png'))
         self.com = ''
         self.ui.progressBar.hide()
@@ -39,11 +42,22 @@ class Deploy(QWidget):
         self.ui.progressBar.setValue(0)
         self.com = '/dev/' + self.ui.combo_box_com.currentText()
 
+    def show(self):
+        pw = self.parent.width()
+        ph = self.parent.height()
+        px = self.parent.geometry().x()
+        py = self.parent.geometry().y()
+
+        w = self.width()
+        h = self.height()
+        self.move(px+(pw-w)/2, py+(ph-h)/2)
+        super().show()
+
 
 class DeployHotLoad(Deploy):
 
-    def __init__(self, pwd):
-        super().__init__()
+    def __init__(self, parent, pwd):
+        super().__init__(parent)
         self.pwd = pwd
 
     def init_view(self):
@@ -84,8 +98,8 @@ class DeployHotLoad(Deploy):
 
 
 class DeployClear(Deploy):
-    def __init__(self, pwd):
-        super().__init__()
+    def __init__(self, parent, pwd):
+        super().__init__(parent)
         self.pwd = pwd
 
     def init_view(self):
@@ -101,15 +115,6 @@ class DeployClear(Deploy):
                 'echo \'{0}\' | sudo ampy -p {1} put {2}/{3}'.format(self.pwd, self.com, './.clear', 'main.py'))
         else:
             QMessageBox.warning(self, 'waring', '请将选项设置完整')
-            
+
         self.ui.progressBar.hide()
         self.close()
-
-
-def get_dialog(taskcode, pwd):
-    if taskcode == 0:
-        dialog = DeployHotLoad(pwd)
-    elif taskcode == 1:
-        dialog = DeployClear(pwd)
-
-    return dialog

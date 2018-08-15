@@ -85,23 +85,39 @@ class EasyEsp(QMainWindow):
 
     def deploy_hotload(self):
         if not self.pwd:
-            self.pwd_confirm = Pwd(0)
+            self.pwd_confirm = Pwd(self, 0)
             self.pwd_confirm.confirmed.connect(self.set_pwd)
             self.pwd_confirm.show()
         else:
-            self.deploy = DeployHotLoad(self.pwd)
+            self.deploy = DeployHotLoad(self, self.pwd)
             self.deploy.show()
 
     def clear_up(self):
         if not self.pwd:
-            self.pwd_confirm = Pwd(1)
+            self.pwd_confirm = Pwd(self, 1)
             self.pwd_confirm.confirmed.connect(self.set_pwd)
             self.pwd_confirm.show()
         else:
-            self.deploy = DeployClear(self.pwd)
+            self.deploy = DeployClear(self, self.pwd)
             self.deploy.show()
 
     def print_logs(self, log):
 
         self.ui.text_browser.setText(
             self.ui.text_browser.toPlainText()+"\n"+log)
+    
+
+    def get_dialog(self, taskcode, pwd):
+        if taskcode == 0:
+            dialog = DeployHotLoad(self, pwd)
+        elif taskcode == 1:
+            dialog = DeployClear(self, pwd)
+
+        return dialog
+
+    def show(self):
+        desktop = QApplication.desktop()
+        self.move((desktop.width()-self.width())/2,
+              (desktop.height()-self.height())/2)
+
+        super().show()
