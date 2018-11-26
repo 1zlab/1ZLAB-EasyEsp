@@ -86,5 +86,5 @@ def handleChange(httpClient, httpResponse):
 
 
 def hotloader():
-    _hotloader = MicroWebSrv()
+    _hotloader = MicroWebSrv(threaded=False)
     return _hotloader

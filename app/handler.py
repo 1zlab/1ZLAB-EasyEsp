@@ -68,8 +68,11 @@ class FileEventHandler(FileSystemEventHandler, QObject):
             if file_type == 'file':
                 with open(event.src_path, 'r') as f:
                     content = f.read()
-            data = dict(event_type='%s_modified' %
-                        file_type, filename=event.src_path.replace(self.path, ''), content=content)
+                    data = dict(event_type='%s_modified' %
+                            file_type, filename=event.src_path.replace(self.path, ''), content=content)
+            else:
+                data = dict(event_type='%s_modified' %
+                        file_type, filename=event.src_path.replace(self.path, ''))
 
         else:
             pass
